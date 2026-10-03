@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Large generated datasets
+data/**/*.npz
+data/raw/
+setting.txt
+
+# Training outputs
+artifacts/checkpoints/
+artifacts/metrics/
+artifacts/analysis/
+checkpoints/
+*.pt
+*.pth
