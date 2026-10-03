@@ -1,0 +1,244 @@
+{
+  "device": "cuda",
+  "variant": "improved",
+  "test_samples": 550,
+  "averaging": "macro",
+  "models": {
+    "densenet161": {
+      "accuracy": 0.9345454545454546,
+      "macro_precision": 0.9351318150759715,
+      "macro_recall": 0.9345454545454546,
+      "macro_f1": 0.934638090021633,
+      "confusion_matrix": [
+        [
+          109,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          1,
+          101,
+          2,
+          0,
+          6
+        ],
+        [
+          0,
+          1,
+          101,
+          5,
+          3
+        ],
+        [
+          0,
+          1,
+          2,
+          104,
+          3
+        ],
+        [
+          0,
+          6,
+          0,
+          5,
+          99
+        ]
+      ],
+      "class_recall": {
+        "A": 0.990909090909091,
+        "B": 0.9181818181818182,
+        "C": 0.9181818181818182,
+        "D": 0.9454545454545454,
+        "E": 0.9
+      },
+      "best_class": "A",
+      "worst_class": "E",
+      "largest_confusion": {
+        "true": "B",
+        "predicted": "E",
+        "count": 6
+      },
+      "checkpoint": "artifacts/checkpoints/densenet161/improved/final/final_densenet161.pth",
+      "confusion_matrix_image": "artifacts/evaluation/improved/confusion_matrix_densenet161.png"
+    },
+    "resnet18": {
+      "accuracy": 0.8745454545454545,
+      "macro_precision": 0.8786515201046093,
+      "macro_recall": 0.8745454545454544,
+      "macro_f1": 0.873244670144399,
+      "confusion_matrix": [
+        [
+          110,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          104,
+          2,
+          2,
+          2
+        ],
+        [
+          0,
+          1,
+          101,
+          7,
+          1
+        ],
+        [
+          0,
+          0,
+          26,
+          79,
+          5
+        ],
+        [
+          2,
+          10,
+          4,
+          7,
+          87
+        ]
+      ],
+      "class_recall": {
+        "A": 1.0,
+        "B": 0.9454545454545454,
+        "C": 0.9181818181818182,
+        "D": 0.7181818181818181,
+        "E": 0.7909090909090909
+      },
+      "best_class": "A",
+      "worst_class": "D",
+      "largest_confusion": {
+        "true": "D",
+        "predicted": "C",
+        "count": 26
+      },
+      "checkpoint": "artifacts/checkpoints/resnet18/improved/final/final_resnet18.pth",
+      "confusion_matrix_image": "artifacts/evaluation/improved/confusion_matrix_resnet18.png"
+    },
+    "efficientnet_b0": {
+      "accuracy": 0.9290909090909091,
+      "macro_precision": 0.9302126693320039,
+      "macro_recall": 0.9290909090909091,
+      "macro_f1": 0.928477538601113,
+      "confusion_matrix": [
+        [
+          110,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          109,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          103,
+          2,
+          4
+        ],
+        [
+          0,
+          1,
+          10,
+          96,
+          3
+        ],
+        [
+          0,
+          11,
+          2,
+          4,
+          93
+        ]
+      ],
+      "class_recall": {
+        "A": 1.0,
+        "B": 0.990909090909091,
+        "C": 0.9363636363636364,
+        "D": 0.8727272727272727,
+        "E": 0.8454545454545455
+      },
+      "best_class": "A",
+      "worst_class": "E",
+      "largest_confusion": {
+        "true": "E",
+        "predicted": "B",
+        "count": 11
+      },
+      "checkpoint": "artifacts/checkpoints/efficientnet_b0/improved/final/final_efficientnet_b0.pth",
+      "confusion_matrix_image": "artifacts/evaluation/improved/confusion_matrix_efficientnet_b0.png"
+    },
+    "mobilenet_v3_large": {
+      "accuracy": 0.8709090909090909,
+      "macro_precision": 0.8712948386250152,
+      "macro_recall": 0.8709090909090909,
+      "macro_f1": 0.8699641600052678,
+      "confusion_matrix": [
+        [
+          110,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          99,
+          2,
+          2,
+          5
+        ],
+        [
+          0,
+          1,
+          98,
+          7,
+          4
+        ],
+        [
+          0,
+          0,
+          17,
+          83,
+          10
+        ],
+        [
+          1,
+          10,
+          5,
+          5,
+          89
+        ]
+      ],
+      "class_recall": {
+        "A": 1.0,
+        "B": 0.9,
+        "C": 0.8909090909090909,
+        "D": 0.7545454545454545,
+        "E": 0.8090909090909091
+      },
+      "best_class": "A",
+      "worst_class": "D",
+      "largest_confusion": {
+        "true": "D",
+        "predicted": "C",
+        "count": 17
+      },
+      "checkpoint": "artifacts/checkpoints/mobilenet_v3_large/improved/final/final_mobilenet_v3_large.pth",
+      "confusion_matrix_image": "artifacts/evaluation/improved/confusion_matrix_mobilenet_v3_large.png"
+    }
+  }
+}

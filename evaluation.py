@@ -1,5 +1,6 @@
-"""Evaluate each final model on the independent test set."""
+"""Evaluate baseline or improved final models on the independent test set."""
 
+import argparse
 import json
 from pathlib import Path
 
@@ -42,10 +43,21 @@ MODEL_BUILDERS = {
 CLASS_NAMES = ("A", "B", "C", "D", "E")
 NUM_CLASSES = len(CLASS_NAMES)
 BATCH_SIZE = 16
-OUTPUT_DIR = Path("artifacts/evaluation")
+OUTPUT_ROOT = Path("artifacts/evaluation")
 
 
-def build_model(model_name, device):
+def parse_args():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--variant",
+        choices=("improved", "baseline"),
+        default="improved",
+        help="checkpoint variant to evaluate (default: improved)",
+    )
+    return parser.parse_args()
+
+
+def build_model(model_name, device, variant):
     model = MODEL_BUILDERS[model_name](weights=None)
     if model_name == "densenet161":
         model.classifier = nn.Sequential(
@@ -62,8 +74,10 @@ def build_model(model_name, device):
             model.classifier[-1].in_features, NUM_CLASSES
         )
 
+    variant_dir = "improved/final" if variant == "improved" else "final"
     checkpoint = Path(
-        f"artifacts/checkpoints/{model_name}/final/final_{model_name}.pth"
+        f"artifacts/checkpoints/{model_name}/{variant_dir}/"
+        f"final_{model_name}.pth"
     )
     model.load_state_dict(
         torch.load(checkpoint, map_location=device, weights_only=True)
@@ -71,7 +85,7 @@ def build_model(model_name, device):
     return model.to(device).eval(), checkpoint
 
 
-def save_confusion_matrix(cm, model_name):
+def save_confusion_matrix(cm, model_name, output_dir):
     fig, ax = plt.subplots(figsize=(6.4, 5.4))
     image = ax.imshow(cm, cmap="Blues")
     fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
@@ -96,7 +110,7 @@ def save_confusion_matrix(cm, model_name):
                 color="white" if cm[row, col] > threshold else "black",
             )
     fig.tight_layout()
-    output_path = OUTPUT_DIR / f"confusion_matrix_{model_name}.png"
+    output_path = output_dir / f"confusion_matrix_{model_name}.png"
     fig.savefig(output_path, dpi=180, bbox_inches="tight")
     plt.close(fig)
     return output_path
@@ -142,7 +156,9 @@ def evaluate(model, loader, device):
 
 
 def main():
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    args = parse_args()
+    output_dir = OUTPUT_ROOT / args.variant
+    output_dir.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     X_test, y_test = dataLoad.load_type_data(type="test")
     loader = DataLoader(
@@ -157,16 +173,17 @@ def main():
 
     results = {
         "device": str(device),
+        "variant": args.variant,
         "test_samples": int(len(y_test)),
         "averaging": "macro",
         "models": {},
     }
     for model_name in MODEL_NAMES:
         print(f"Evaluating {model_name}...")
-        model, checkpoint = build_model(model_name, device)
+        model, checkpoint = build_model(model_name, device, args.variant)
         metrics = evaluate(model, loader, device)
         image_path = save_confusion_matrix(
-            np.asarray(metrics["confusion_matrix"]), model_name
+            np.asarray(metrics["confusion_matrix"]), model_name, output_dir
         )
         metrics["checkpoint"] = checkpoint.as_posix()
         metrics["confusion_matrix_image"] = image_path.as_posix()
@@ -175,7 +192,7 @@ def main():
         if device.type == "cuda":
             torch.cuda.empty_cache()
 
-    output_path = OUTPUT_DIR / "model_comparison.json"
+    output_path = output_dir / "model_comparison.json"
     output_path.write_text(
         json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8"
     )

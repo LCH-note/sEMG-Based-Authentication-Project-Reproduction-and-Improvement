@@ -34,7 +34,7 @@ def load_model(device, model_name=MODEL_NAME):
             nn.Dropout(p=0.2),
             nn.Linear(in_features, NUM_CLASSES),
         )
-        model.load_state_dict(torch.load(f'artifacts/checkpoints/{MODEL_NAME}/final/final_{MODEL_NAME}.pth',map_location=dev,))
+        model.load_state_dict(torch.load(f'artifacts/checkpoints/{MODEL_NAME}/improved/final/final_{MODEL_NAME}.pth',map_location=dev,))
 
     elif model_name == "resnet18":
         in_features = model.fc.in_features
@@ -42,7 +42,7 @@ def load_model(device, model_name=MODEL_NAME):
             nn.Dropout(p=0.2),
             nn.Linear(in_features, NUM_CLASSES),
         )
-        model.load_state_dict(torch.load(f'artifacts/checkpoints/{MODEL_NAME}/cross_validation/best_{MODEL_NAME}_5fold.pth',map_location=dev,))
+        model.load_state_dict(torch.load(f'artifacts/checkpoints/{MODEL_NAME}/improved/final/final_{MODEL_NAME}.pth',map_location=dev,))
 
     elif model_name in {"efficientnet_b0", "mobilenet_v3_large"}:
         in_features = model.classifier[-1].in_features
@@ -51,7 +51,7 @@ def load_model(device, model_name=MODEL_NAME):
             NUM_CLASSES,
         )
         model.load_state_dict(torch.load(
-            f'artifacts/checkpoints/{MODEL_NAME}/cross_validation/best_{MODEL_NAME}_5fold.pth',
+            f'artifacts/checkpoints/{MODEL_NAME}/improved/final/final_{MODEL_NAME}.pth',
             map_location=dev,
         ))
 
