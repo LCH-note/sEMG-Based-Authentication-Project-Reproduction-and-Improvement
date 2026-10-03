@@ -1,4 +1,4 @@
-"""Evaluate every saved 5-fold model on the independent test set."""
+"""Evaluate each final model on the independent test set."""
 
 import json
 from pathlib import Path
@@ -63,8 +63,7 @@ def build_model(model_name, device):
         )
 
     checkpoint = Path(
-        f"artifacts/checkpoints/{model_name}/cross_validation/"
-        f"best_{model_name}_5fold.pth"
+        f"artifacts/checkpoints/{model_name}/final/final_{model_name}.pth"
     )
     model.load_state_dict(
         torch.load(checkpoint, map_location=device, weights_only=True)
