@@ -39,7 +39,7 @@ MODEL_CHOICES = {
 NUM_CLASSES = 5
 N_FOLDS = 5
 SEED = 42
-DEFAULT_MODEL = "densenet161"  # 사용할 모델 이름을 선택합니다. (densenet161, resnet18, efficientnet_b0, mobilenet_v3_large)
+DEFAULT_MODEL = "resnet18"  # 사용할 모델 이름을 선택합니다. (densenet161, resnet18, efficientnet_b0, mobilenet_v3_large)
 DEFAULT_MAX_EPOCHS = 60
 DEFAULT_PATIENCE = 12
 DEFAULT_BATCH_SIZE = 16
@@ -263,10 +263,10 @@ def aggregate_file_predictions(logits, labels, file_names):
 
 
 def is_better(accuracy, loss, best_accuracy, best_loss):
-    return accuracy > best_accuracy or (
-        np.isclose(accuracy, best_accuracy) and loss < best_loss
+    return  bool(
+        accuracy > best_accuracy
+        or (np.isclose(accuracy, best_accuracy) and loss < best_loss)
     )
-
 
 def train_cross_validation(args, device, criterion, save_cv):
     fold_results = []
