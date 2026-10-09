@@ -59,8 +59,8 @@
         "predicted": "B",
         "count": 17
       },
-      "checkpoint": "artifacts/checkpoints/densenet161/final/final_densenet161.pth",
-      "confusion_matrix_image": "artifacts/evaluation/confusion_matrix_densenet161.png"
+      "checkpoint": "artifacts/runs/baseline_win500_hop250/checkpoints/densenet161/final/final_densenet161.pth",
+      "confusion_matrix_image": "artifacts/runs/baseline_win500_hop250/evaluation/confusion_matrix_densenet161.png"
     },
     "resnet18": {
       "accuracy": 0.9254545454545454,
@@ -118,8 +118,8 @@
         "predicted": "A",
         "count": 6
       },
-      "checkpoint": "artifacts/checkpoints/resnet18/final/final_resnet18.pth",
-      "confusion_matrix_image": "artifacts/evaluation/confusion_matrix_resnet18.png"
+      "checkpoint": "artifacts/runs/baseline_win500_hop250/checkpoints/resnet18/final/final_resnet18.pth",
+      "confusion_matrix_image": "artifacts/runs/baseline_win500_hop250/evaluation/confusion_matrix_resnet18.png"
     },
     "efficientnet_b0": {
       "accuracy": 0.9218181818181819,
@@ -177,8 +177,8 @@
         "predicted": "B",
         "count": 14
       },
-      "checkpoint": "artifacts/checkpoints/efficientnet_b0/final/final_efficientnet_b0.pth",
-      "confusion_matrix_image": "artifacts/evaluation/confusion_matrix_efficientnet_b0.png"
+      "checkpoint": "artifacts/runs/baseline_win500_hop250/checkpoints/efficientnet_b0/final/final_efficientnet_b0.pth",
+      "confusion_matrix_image": "artifacts/runs/baseline_win500_hop250/evaluation/confusion_matrix_efficientnet_b0.png"
     },
     "mobilenet_v3_large": {
       "accuracy": 0.8636363636363636,
@@ -236,8 +236,8 @@
         "predicted": "E",
         "count": 17
       },
-      "checkpoint": "artifacts/checkpoints/mobilenet_v3_large/final/final_mobilenet_v3_large.pth",
-      "confusion_matrix_image": "artifacts/evaluation/confusion_matrix_mobilenet_v3_large.png"
+      "checkpoint": "artifacts/runs/baseline_win500_hop250/checkpoints/mobilenet_v3_large/final/final_mobilenet_v3_large.pth",
+      "confusion_matrix_image": "artifacts/runs/baseline_win500_hop250/evaluation/confusion_matrix_mobilenet_v3_large.png"
     }
   }
 }

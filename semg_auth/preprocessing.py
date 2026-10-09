@@ -62,7 +62,7 @@ number = 33
 # number = 65
 SCALES = np.arange(1, number) # 스케일 32개
 def to_cwt(one_window, wavelet='morl'):
-    """(300, 2) -> (3, 32, 300)"""
+    """(시간, 2) 신호를 (3, 32, 시간) CWT 텐서로 변환합니다."""
     maps = []
     for ch in range(one_window.shape[1]):
         coef, _ = pywt.cwt(one_window[:, ch], SCALES, wavelet)

@@ -1,0 +1,6 @@
+pip install numpy scipy matplotlib pandas scikit-learn
+pip install pywavelets
+pip install torch torchvision
+
+python -c "import numpy, scipy, sklearn; print('OK')"
+

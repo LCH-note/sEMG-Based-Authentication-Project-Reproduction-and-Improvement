@@ -2,13 +2,16 @@
 import os, glob
 from sklearn.model_selection import StratifiedKFold, train_test_split
 import numpy as np
-from dataset import build, label_of
+from scripts.build_standard_dataset import build, label_of
+from semg_auth.preprocessing import HOP, WIN
 from pathlib import Path
 
 
 # 저장할 대상 폴더 경로 설정 및 폴더 생성 (폴더가 없으면 자동 생성)
-SAVE_DIR = Path("data/5fold dataset")
+SAVE_DIR = Path(f"data/processed/win{WIN}_hop{HOP}")
+FOLD_DIR = SAVE_DIR / "folds"
 SAVE_DIR.mkdir(parents=True, exist_ok=True)
+FOLD_DIR.mkdir(parents=True, exist_ok=True)
 
 def mk_data():
 
@@ -56,10 +59,10 @@ def mk_data():
         Xva, yva = build(val_files)
 
         # 데이터셋을 압축 형식(.npz)으로 저장
-        fold_path = SAVE_DIR / f"fold{fold}_dataset.npz"
+        fold_path = FOLD_DIR / f"fold{fold}_dataset.npz"
         np.savez_compressed(fold_path, Xtr=Xtr, ytr=ytr, Xva=Xva, yva=yva, train_files=np.asarray(train_files, dtype=str), val_files=np.asarray(val_files, dtype=str))
 
-        print(f"Fold {fold} 데이터셋 저장 완료!\n저장 경로: {SAVE_DIR}")
+        print(f"Fold {fold} 데이터셋 저장 완료!\n저장 경로: {FOLD_DIR}")
 
 if __name__ == "__main__":
     mk_data()

@@ -3,7 +3,7 @@ import json
 import random
 from pathlib import Path
 
-import dataLoad
+from semg_auth import data_loading as dataLoad
 import numpy as np
 import torch
 import torch.nn as nn
@@ -18,9 +18,10 @@ N_FOLDS = 5
 NUM_CLASSES = 5  # dataset.label_of()의 A~E -> 0~4
 SEED = 42
 MODEL_NAME = "mobilenet_v3_large"  # 사용할 모델 이름을 선택합니다. (densenet161, resnet18, efficientnet_b0, mobilenet_v3_large)
-SAVE_5FOLD = Path(f"artifacts/checkpoints/{MODEL_NAME}/cross_validation")
-SAVE_FINAL = Path(f"artifacts/checkpoints/{MODEL_NAME}/final")
-SAVE_METRICS = Path("artifacts/metrics")
+RUN_DIR = Path("artifacts/runs/baseline_win500_hop250")
+SAVE_5FOLD = RUN_DIR / "checkpoints" / MODEL_NAME / "cross_validation"
+SAVE_FINAL = RUN_DIR / "checkpoints" / MODEL_NAME / "final"
+SAVE_METRICS = RUN_DIR / "metrics"
 
 model_choices = {
     "densenet161": densenet161,

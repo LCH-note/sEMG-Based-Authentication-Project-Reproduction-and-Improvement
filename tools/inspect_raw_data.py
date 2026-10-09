@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from scipy.signal import welch
 import numpy as np, glob, os
+from pathlib import Path
 
 # 데이터 확인
 
@@ -28,7 +29,9 @@ for a in ax:
     a.axvline(1.0, color='r', ls='--')
     a.axvline(2.0, color='r', ls='--')
     ax[1].set_xlabel('time (s)')
-plt.tight_layout(); plt.savefig('signal_example.png', dpi=120)
+output_path = Path('artifacts/analysis/signal_example.png')
+output_path.parent.mkdir(parents=True, exist_ok=True)
+plt.tight_layout(); plt.savefig(output_path, dpi=120)
 
 
 # f0, P0 = welch(x[:, 0], fs=FS, nperseg=512)

@@ -21,7 +21,7 @@ from torchvision.models import (
     resnet18,
 )
 
-import dataLoad
+from semg_auth import data_loading as dataLoad
 
 
 matplotlib.use("Agg")
@@ -43,7 +43,10 @@ MODEL_BUILDERS = {
 CLASS_NAMES = ("A", "B", "C", "D", "E")
 NUM_CLASSES = len(CLASS_NAMES)
 BATCH_SIZE = 16
-OUTPUT_ROOT = Path("artifacts/evaluation")
+RUN_NAMES = {
+    "baseline": "baseline_win500_hop250",
+    "improved": "improved_win500_hop250",
+}
 
 
 def parse_args():
@@ -74,10 +77,13 @@ def build_model(model_name, device, variant):
             model.classifier[-1].in_features, NUM_CLASSES
         )
 
-    variant_dir = "improved/final" if variant == "improved" else "final"
-    checkpoint = Path(
-        f"artifacts/checkpoints/{model_name}/{variant_dir}/"
-        f"final_{model_name}.pth"
+    checkpoint = (
+        Path("artifacts/runs")
+        / RUN_NAMES[variant]
+        / "checkpoints"
+        / model_name
+        / "final"
+        / f"final_{model_name}.pth"
     )
     model.load_state_dict(
         torch.load(checkpoint, map_location=device, weights_only=True)
@@ -157,7 +163,7 @@ def evaluate(model, loader, device):
 
 def main():
     args = parse_args()
-    output_dir = OUTPUT_ROOT / args.variant
+    output_dir = Path("artifacts/runs") / RUN_NAMES[args.variant] / "evaluation"
     output_dir.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     X_test, y_test = dataLoad.load_type_data(type="test")

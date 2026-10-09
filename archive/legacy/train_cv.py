@@ -4,8 +4,8 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 from torchvision.models import densenet161, mobilenet_v3_large, resnet18, efficientnet_b0
 from sklearn.model_selection import StratifiedKFold
-import dataLoad
-from dataset import build, load, label_of
+from semg_auth import data_loading as dataLoad
+from scripts.build_standard_dataset import build, load, label_of
 from pathlib import Path
 
 EPOCHS = 45
@@ -13,7 +13,7 @@ BATCH_SIZE = 16
 NUM_CLASSES = 5
 N_FOLDS = 5
 MODEL_NAME = "mobilenet_v3_large"  # 사용할 모델 이름을 선택합니다. (densenet161, resnet18, efficientnet_b0, mobilenet_v3_large)
-CHECKPOINT_DIR = Path(f"artifacts/checkpoints/{MODEL_NAME}/legacy_cv")
+CHECKPOINT_DIR = Path(f"artifacts/runs/legacy_win300_hop150/checkpoints/{MODEL_NAME}/cross_validation")
 CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
 
 

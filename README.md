@@ -4,6 +4,25 @@
 
 이 프로젝트는 원 연구의 DenseNet161 기반 분류를 재현하고, ResNet18·EfficientNet-B0·MobileNetV3-Large까지 비교하여 정확도뿐 아니라 모델 크기와 실행 시간의 균형을 분석합니다.
 
+## 프로젝트 구조
+
+```text
+C1/
+├─ semg_auth/                  # 전처리와 데이터 로딩 공통 모듈
+├─ scripts/                    # 데이터 생성, 학습, 평가, 벤치마크 실행 모듈
+├─ tools/                      # 원본 데이터와 전처리 수동 점검 도구
+├─ archive/legacy/             # 현재 주 파이프라인 이전 코드
+├─ data/
+│  ├─ raw/                     # 피험자별 원본 CSV
+│  └─ processed/               # WIN/HOP 설정별 NPZ 데이터셋
+├─ artifacts/
+│  ├─ runs/                    # 실험별 체크포인트, 지표, 평가 결과
+│  └─ analysis/                # 신호 분석 결과
+└─ docs/                       # 환경 설정 메모 등 보조 문서
+```
+
+실행 파일은 프로젝트 루트에서 `python -m scripts.<모듈명>` 형식으로 실행합니다. 실험 결과는 모델별로 흩어 두지 않고 `baseline_win500_hop250`, `improved_win500_hop250`처럼 하나의 실행 설정 아래에 모아 관리합니다.
+
 ## 1. 데이터 및 전처리
 
 ### 데이터 구성
@@ -49,7 +68,7 @@ CNN input (3, 32, 500)
 - EfficientNet-B0
 - MobileNetV3-Large
 
-최종 실험은 `five_fold_improved.py`로 수행했습니다. 공통 학습 설정은 다음과 같습니다.
+최종 실험은 `scripts/train_improved_cv.py`로 수행했습니다. 공통 학습 설정은 다음과 같습니다.
 
 | 항목 | 설정 |
 |---|---:|
@@ -106,46 +125,47 @@ data/raw/
 ### 데이터셋 생성
 
 ```bash
-python five_fold_data_mk.py
+python -m scripts.build_five_fold_dataset
 ```
 
-위 명령은 독립 학습/테스트 세트와 5개 교차검증 Fold를 `data/5fold dataset/`에 생성합니다.
+위 명령은 독립 학습/테스트 세트와 5개 교차검증 Fold를 `data/processed/win500_hop250/`에 생성합니다.
 
 ### 모델 학습
 
 모델명을 인자로 지정해 개선된 학습 파이프라인을 실행합니다.
 
 ```bash
-python five_fold_improved.py --model densenet161
-python five_fold_improved.py --model resnet18
-python five_fold_improved.py --model efficientnet_b0
-python five_fold_improved.py --model mobilenet_v3_large
+python -m scripts.train_improved_cv --model densenet161
+python -m scripts.train_improved_cv --model resnet18
+python -m scripts.train_improved_cv --model efficientnet_b0
+python -m scripts.train_improved_cv --model mobilenet_v3_large
 ```
 
-각 실험의 전체 학습 이력, OOF 성능, 혼동행렬, classification report, 윈도우/CSV 단위 독립 테스트 결과가 `artifacts/metrics/results_5fold_improved_<model>.json`에 저장됩니다.
+각 실험의 전체 학습 이력, OOF 성능, 혼동행렬, classification report, 윈도우/CSV 단위 독립 테스트 결과가 `artifacts/runs/improved_win500_hop250/metrics/results_5fold_improved_<model>.json`에 저장됩니다.
 
 ### 전체 모델 평가 및 혼동행렬 생성
 
 ```bash
-python evaluation.py --variant improved
+python -m scripts.evaluate_models --variant improved
 ```
 
-평가 결과는 `artifacts/evaluation/improved/model_comparison.json`에, 혼동행렬은 모델별 PNG 파일로 저장됩니다. 기존 모델을 다시 평가하려면 `--variant baseline`을 사용합니다.
+평가 결과는 `artifacts/runs/improved_win500_hop250/evaluation/model_comparison.json`에, 혼동행렬은 모델별 PNG 파일로 저장됩니다. 기존 모델을 다시 평가하려면 `--variant baseline`을 사용합니다.
 
 ## 4. 코드 설명
 
 | 파일 | 설명 |
 |---|---|
-| `preprocess.py` | 노치/대역통과 필터, 슬라이딩 윈도우, 정규화, CWT 변환 |
-| `dataset.py` | 원본 CSV 로드, 사용자 라벨 생성, 파일 단위 train/test 분할 |
-| `five_fold_data_mk.py` | 독립 테스트 세트 및 누수 방지 5-Fold 데이터셋 생성 |
-| `dataLoad.py` | 일반·Fold·독립 테스트 NPZ 데이터 로드 |
-| `five_fold_improved.py` | AdamW, 조기 종료, OOF/CSV 단위 평가, CV 기반 Epoch 산정, 새 모델 최종 학습 |
-| `five_fold_new.py` | 기존 45 Epoch 5-Fold 학습과 기준 성능 재현 |
-| `evaluation.py` | `baseline`/`improved` 최종 모델의 평가 JSON 및 혼동행렬 PNG 생성 |
-| `check.py` | 파라미터 수, 45 Epoch 학습 시간, 샘플당 추론 시간 측정 |
-| `testSet.py` | 지정한 단일 체크포인트의 분류 성능을 콘솔에서 확인 |
-| `nomalTraining.py` | DenseNet161 기본 train/test 학습 실험 |
+| `semg_auth/preprocessing.py` | 노치/대역통과 필터, 슬라이딩 윈도우, 정규화, CWT 변환 |
+| `semg_auth/data_loading.py` | 일반·Fold·독립 테스트 NPZ 데이터 로드 |
+| `scripts/build_standard_dataset.py` | 원본 CSV 로드, 사용자 라벨 생성, 일반 train/test 데이터셋 생성 |
+| `scripts/build_five_fold_dataset.py` | 독립 테스트 세트 및 누수 방지 5-Fold 데이터셋 생성 |
+| `scripts/train_improved_cv.py` | AdamW, 조기 종료, OOF/CSV 단위 평가, CV 기반 Epoch 산정, 새 모델 최종 학습 |
+| `scripts/train_baseline_cv.py` | 기존 45 Epoch 5-Fold 학습과 기준 성능 재현 |
+| `scripts/evaluate_models.py` | `baseline`/`improved` 최종 모델의 평가 JSON 및 혼동행렬 PNG 생성 |
+| `scripts/benchmark_models.py` | 파라미터 수, 45 Epoch 학습 시간, 샘플당 추론 시간 측정 |
+| `scripts/evaluate_checkpoint.py` | 지정한 단일 체크포인트의 분류 성능을 콘솔에서 확인 |
+| `archive/legacy/` | 현재 주 파이프라인 이전의 학습 코드 보관 |
+| `tools/` | 원본 데이터와 전처리 결과를 수동으로 점검하는 도구 |
 
 ## 5. 모델 성능 비교
 
@@ -205,7 +225,7 @@ ResNet18은 구조적으로 가장 빠른 학습과 추론을 보였지만, 개�
 
 ### DenseNet161
 
-![DenseNet161 confusion matrix](artifacts/evaluation/improved/confusion_matrix_densenet161.png)
+![DenseNet161 confusion matrix](artifacts/runs/improved_win500_hop250/evaluation/confusion_matrix_densenet161.png)
 
 - 가장 잘 분류된 클래스: `A` — 109/110, Recall 99.09%
 - 가장 많이 오분류된 클래스: `E` — 99/110, Recall 90.00%
@@ -214,7 +234,7 @@ ResNet18은 구조적으로 가장 빠른 학습과 추론을 보였지만, 개�
 
 ### ResNet18
 
-![ResNet18 confusion matrix](artifacts/evaluation/improved/confusion_matrix_resnet18.png)
+![ResNet18 confusion matrix](artifacts/runs/improved_win500_hop250/evaluation/confusion_matrix_resnet18.png)
 
 - 가장 잘 분류된 클래스: `A` — 110/110, Recall 100.00%
 - 가장 많이 오분류된 클래스: `D` — 79/110, Recall 71.82%
@@ -223,7 +243,7 @@ ResNet18은 구조적으로 가장 빠른 학습과 추론을 보였지만, 개�
 
 ### EfficientNet-B0
 
-![EfficientNet-B0 confusion matrix](artifacts/evaluation/improved/confusion_matrix_efficientnet_b0.png)
+![EfficientNet-B0 confusion matrix](artifacts/runs/improved_win500_hop250/evaluation/confusion_matrix_efficientnet_b0.png)
 
 - 가장 잘 분류된 클래스: `A` — 110/110, Recall 100.00%
 - 가장 많이 오분류된 클래스: `E` — 93/110, Recall 84.55%
@@ -232,7 +252,7 @@ ResNet18은 구조적으로 가장 빠른 학습과 추론을 보였지만, 개�
 
 ### MobileNetV3-Large
 
-![MobileNetV3-Large confusion matrix](artifacts/evaluation/improved/confusion_matrix_mobilenet_v3_large.png)
+![MobileNetV3-Large confusion matrix](artifacts/runs/improved_win500_hop250/evaluation/confusion_matrix_mobilenet_v3_large.png)
 
 - 가장 잘 분류된 클래스: `A` — 110/110, Recall 100.00%
 - 가장 많이 오분류된 클래스: `D` — 83/110, Recall 75.45%
@@ -262,15 +282,16 @@ ResNet18은 구조적으로 가장 빠른 학습과 추론을 보였지만, 개�
 `*.npz`, `*.pth`, `data/raw/`, 체크포인트와 중간 분석 결과는 용량 또는 데이터 배포 문제로 `.gitignore`에 포함되어 있습니다. GitHub에는 재현 코드, README, 최종 평가 JSON과 혼동행렬 PNG가 올라가며, 대용량 파일은 실행 과정에서 로컬에 생성됩니다.
 
 ```text
-data/5fold dataset/*.npz
-artifacts/checkpoints/<model>/improved/cross_validation/*.pth
-artifacts/checkpoints/<model>/improved/final/*.pth
-artifacts/metrics/results_5fold_improved_<model>.json
-artifacts/evaluation/improved/model_comparison.json
-artifacts/evaluation/improved/confusion_matrix_<model>.png
+data/processed/win500_hop250/*.npz
+data/processed/win500_hop250/folds/*.npz
+artifacts/runs/improved_win500_hop250/checkpoints/<model>/cross_validation/*.pth
+artifacts/runs/improved_win500_hop250/checkpoints/<model>/final/*.pth
+artifacts/runs/improved_win500_hop250/metrics/results_5fold_improved_<model>.json
+artifacts/runs/improved_win500_hop250/evaluation/model_comparison.json
+artifacts/runs/improved_win500_hop250/evaluation/confusion_matrix_<model>.png
 ```
 
-`artifacts/evaluation/improved/`의 최종 평가 JSON과 PNG는 `.gitignore`에서 제외하여 README의 이미지가 GitHub에서도 표시되도록 했습니다. 대용량 학습 데이터와 체크포인트, 상세 학습 이력 JSON은 Git 추적에서 제외됩니다.
+`artifacts/runs/improved_win500_hop250/evaluation/`의 최종 평가 JSON과 PNG는 Git으로 관리할 수 있도록 유지했습니다. 대용량 학습 데이터와 체크포인트, 중간 분석 결과는 Git 추적에서 제외됩니다.
 
 ## 9. 데이터 출처 및 라이선스
 

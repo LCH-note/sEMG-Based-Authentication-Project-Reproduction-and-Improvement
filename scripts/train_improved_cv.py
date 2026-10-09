@@ -7,7 +7,7 @@
 4. 독립 test는 최종 모델 학습이 끝난 뒤 한 번만 평가한다.
 
 실행 예시:
-    python five_fold_improved.py --model efficientnet_b0
+    python -m scripts.train_improved_cv --model efficientnet_b0
 """
 
 import argparse
@@ -15,7 +15,7 @@ import json
 import random
 from pathlib import Path
 
-import dataLoad
+from semg_auth import data_loading as dataLoad
 import numpy as np
 import torch
 import torch.nn as nn
@@ -45,8 +45,9 @@ DEFAULT_PATIENCE = 12
 DEFAULT_BATCH_SIZE = 16
 DEFAULT_LEARNING_RATE = 1e-3
 DEFAULT_WEIGHT_DECAY = 1e-4
-DATA_DIR = Path("data/5fold dataset")
-SAVE_METRICS = Path("artifacts/metrics")
+DATA_DIR = Path("data/processed/win500_hop250")
+RUN_DIR = Path("artifacts/runs/improved_win500_hop250")
+SAVE_METRICS = RUN_DIR / "metrics"
 CLASS_NAMES = [f"subject_{chr(ord('A') + i)}" for i in range(NUM_CLASSES)]
 
 
@@ -351,7 +352,7 @@ def train_cross_validation(args, device, criterion, save_cv):
         oof_predictions.append(predictions)
 
         val_files = read_file_names(
-            DATA_DIR / f"fold{fold}_dataset.npz",
+        DATA_DIR / "folds" / f"fold{fold}_dataset.npz",
             "val_files",
         )
         file_result = aggregate_file_predictions(logits, labels, val_files)
@@ -501,10 +502,8 @@ def main():
     validate_args(args)
     set_seed(SEED)
 
-    save_cv = Path(
-        f"artifacts/checkpoints/{args.model}/improved/cross_validation"
-    )
-    save_final = Path(f"artifacts/checkpoints/{args.model}/improved/final")
+    save_cv = RUN_DIR / "checkpoints" / args.model / "cross_validation"
+    save_final = RUN_DIR / "checkpoints" / args.model / "final"
     save_cv.mkdir(parents=True, exist_ok=True)
     save_final.mkdir(parents=True, exist_ok=True)
     SAVE_METRICS.mkdir(parents=True, exist_ok=True)

@@ -2,11 +2,11 @@ import torch
 import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 from torchvision.models import densenet161
-import dataLoad as dataLoad  # dataLoad.py에서 load_data() 함수를 가져옵니다.
+from semg_auth import data_loading as dataLoad
 from pathlib import Path
 
 # 1. 데이터셋 로드
-PATH = "data/semg_dataset.npz"  # 데이터셋 경로
+PATH = "data/processed/win300_hop150/semg_dataset.npz"
 Xtr, ytr, Xte, yte = dataLoad.load_data(PATH)
 
 # GPU/CPU 장치 설정
@@ -19,7 +19,7 @@ train_dataset = TensorDataset(torch.tensor(Xtr, dtype=torch.float32), torch.tens
 test_dataset  = TensorDataset(torch.tensor(Xte, dtype=torch.float32), torch.tensor(yte, dtype=torch.long))
 
 BATCH_SIZE = 16
-CHECKPOINT_PATH = Path("artifacts/checkpoints/densenet161/standard/best_densenet161.pth")
+CHECKPOINT_PATH = Path("artifacts/runs/legacy_win300_hop150/checkpoints/densenet161/standard/best_densenet161.pth")
 CHECKPOINT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)

@@ -1,11 +1,10 @@
 import os
 import numpy as np, glob
-from preprocess import preprocess, make_windows, minmax, to_cwt
+from semg_auth.preprocessing import HOP, WIN, make_windows, minmax, preprocess, to_cwt
 
 # 데이터셋 만들기
 
 files = sorted(glob.glob('data/raw/**/*.csv', recursive=True))
-TYPE = "cwt_scaled_16"  # 저장될 데이터셋 이름
 
 from sklearn.model_selection import train_test_split
 
@@ -43,11 +42,11 @@ if __name__== '__main__':
     Xte, yte = build(te_files)
 
     # 저장할 대상 폴더 경로 설정 및 폴더 생성 (폴더가 없으면 자동 생성)
-    save_dir = "data"
+    save_dir = f"data/processed/win{WIN}_hop{HOP}"
     os.makedirs(save_dir, exist_ok=True)
 
     # 데이터셋을 압축 형식(.npz)으로 저장
-    save_path = os.path.join(save_dir, F"semg_dataset_{TYPE}.npz")
+    save_path = os.path.join(save_dir, "semg_dataset.npz")
     np.savez_compressed(save_path, Xtr=Xtr, ytr=ytr, Xte=Xte, yte=yte)
 
     print(f"데이터셋 저장 완료!\n저장 경로: {save_path}")

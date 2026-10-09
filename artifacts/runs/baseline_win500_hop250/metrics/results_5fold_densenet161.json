@@ -1,0 +1,190 @@
+{
+  "epochs": 45,
+  "batch_size": 16,
+  "learning_rate": 0.001,
+  "model_name": "densenet161",
+  "seed": 42,
+  "fold_results": [
+    {
+      "fold": 1,
+      "best_epoch": 33,
+      "best_acc": 90.22727272727273,
+      "best_loss": 0.41586812180361116,
+      "last_acc": 90.0,
+      "path": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\cross_validation\\best_densenet161_fold1.pth"
+    },
+    {
+      "fold": 2,
+      "best_epoch": 27,
+      "best_acc": 94.31818181818181,
+      "best_loss": 0.16850501958873462,
+      "last_acc": 92.27272727272727,
+      "path": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\cross_validation\\best_densenet161_fold2.pth"
+    },
+    {
+      "fold": 3,
+      "best_epoch": 41,
+      "best_acc": 93.86363636363636,
+      "best_loss": 0.24790608169436879,
+      "last_acc": 93.4090909090909,
+      "path": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\cross_validation\\best_densenet161_fold3.pth"
+    },
+    {
+      "fold": 4,
+      "best_epoch": 36,
+      "best_acc": 93.86363636363636,
+      "best_loss": 0.3501665471121669,
+      "last_acc": 92.72727272727273,
+      "path": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\cross_validation\\best_densenet161_fold4.pth"
+    },
+    {
+      "fold": 5,
+      "best_epoch": 27,
+      "best_acc": 96.36363636363636,
+      "best_loss": 0.15205044073280244,
+      "last_acc": 94.54545454545455,
+      "path": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\cross_validation\\best_densenet161_fold5.pth"
+    }
+  ],
+  "selected_fold": 5,
+  "selected_epoch": 27,
+  "cv_best_mean": 93.72727272727273,
+  "cv_best_std": 1.9792310051888362,
+  "cv_last_mean": 92.5909090909091,
+  "cv_last_std": 1.5048132142951685,
+  "validation_source": "cross_validation_train_split_only",
+  "independent_test_evaluated": true,
+  "test_evaluation_count": 1,
+  "test_loss": 0.2512534008084119,
+  "test_acc": 91.63636363636364,
+  "full_train_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.2337494644073939,
+      "train_acc": 92.4090909090909
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.1506125327521427,
+      "train_acc": 95.18181818181819
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.15654191124845634,
+      "train_acc": 94.81818181818181
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.11316632270177995,
+      "train_acc": 95.86363636363636
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.11221826324916699,
+      "train_acc": 96.0909090909091
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.1263908821022646,
+      "train_acc": 95.72727272727273
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.09948196930895475,
+      "train_acc": 96.54545454545455
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.10348780954595317,
+      "train_acc": 96.18181818181819
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.07390702591700987,
+      "train_acc": 97.54545454545455
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.06237856374037537,
+      "train_acc": 98.0
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.0615626875590533,
+      "train_acc": 97.81818181818181
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.060174230600876566,
+      "train_acc": 98.04545454545455
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.07263058414330854,
+      "train_acc": 97.27272727272727
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.05983245104826479,
+      "train_acc": 97.77272727272727
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.025826536823085257,
+      "train_acc": 98.95454545454545
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.04602645993560807,
+      "train_acc": 98.18181818181819
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.0565588752892588,
+      "train_acc": 98.04545454545455
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.02924273984347978,
+      "train_acc": 99.0909090909091
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.03910734745589169,
+      "train_acc": 98.72727272727273
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.0184245007306295,
+      "train_acc": 99.27272727272727
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.018902632457426412,
+      "train_acc": 99.36363636363636
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.01760899305460043,
+      "train_acc": 99.63636363636364
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.007670327552014813,
+      "train_acc": 99.81818181818181
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.015338140414843854,
+      "train_acc": 99.4090909090909
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.03357857631535312,
+      "train_acc": 98.9090909090909
+    }
+  ],
+  "best_cv_model": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\cross_validation\\best_densenet161_5fold.pth",
+  "final_model": "artifacts\\runs\\baseline_win500_hop250\\checkpoints\\densenet161\\final\\final_densenet161.pth",
+  "final_training": "selected_fold_weights_plus_full_train_fixed_epochs"
+}

@@ -5,20 +5,18 @@ __pycache__/
 # Virtual environment
 .venv/
 venv/
+.env
 
 # IDE
 .vscode/
 .idea/
 
 # Large generated datasets
-data/**/*.npz
 data/raw/
-setting.txt
+data/processed/
 
 # Training outputs
-artifacts/checkpoints/
-artifacts/metrics/
+artifacts/runs/**/checkpoints/
 artifacts/analysis/
-checkpoints/
 *.pt
 *.pth

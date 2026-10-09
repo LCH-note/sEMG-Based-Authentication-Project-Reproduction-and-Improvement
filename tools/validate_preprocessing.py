@@ -9,7 +9,7 @@ if str(ROOT) not in sys.path:
 
 
 import numpy as np, glob
-from preprocess import preprocess, make_windows, minmax, to_cwt
+from semg_auth.preprocessing import make_windows, minmax, preprocess, to_cwt
 
 files = sorted(glob.glob('data/raw/**/*.csv', recursive=True))
 x = np.loadtxt(files[0], delimiter=',', skiprows=1)

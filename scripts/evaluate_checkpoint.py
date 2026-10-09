@@ -4,7 +4,7 @@ from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
 from torchvision.models import densenet161, mobilenet_v3_large, resnet18, efficientnet_b0
 from sklearn.metrics import (accuracy_score, f1_score, confusion_matrix, classification_report)
-import dataLoad
+from semg_auth import data_loading as dataLoad
 
 NUM_CLASSES = 5
 MODEL_NAME = "densenet161"  # 사용할 모델 이름을 선택합니다. (densenet161, resnet18, efficientnet_b0, mobilenet_v3_large)
@@ -34,7 +34,7 @@ def load_model(device, model_name=MODEL_NAME):
             nn.Dropout(p=0.2),
             nn.Linear(in_features, NUM_CLASSES),
         )
-        model.load_state_dict(torch.load(f'artifacts/checkpoints/{MODEL_NAME}/improved/final/final_{MODEL_NAME}.pth',map_location=dev,))
+        model.load_state_dict(torch.load(f'artifacts/runs/improved_win500_hop250/checkpoints/{MODEL_NAME}/final/final_{MODEL_NAME}.pth',map_location=dev,))
 
     elif model_name == "resnet18":
         in_features = model.fc.in_features
@@ -42,7 +42,7 @@ def load_model(device, model_name=MODEL_NAME):
             nn.Dropout(p=0.2),
             nn.Linear(in_features, NUM_CLASSES),
         )
-        model.load_state_dict(torch.load(f'artifacts/checkpoints/{MODEL_NAME}/improved/final/final_{MODEL_NAME}.pth',map_location=dev,))
+        model.load_state_dict(torch.load(f'artifacts/runs/improved_win500_hop250/checkpoints/{MODEL_NAME}/final/final_{MODEL_NAME}.pth',map_location=dev,))
 
     elif model_name in {"efficientnet_b0", "mobilenet_v3_large"}:
         in_features = model.classifier[-1].in_features
@@ -51,7 +51,7 @@ def load_model(device, model_name=MODEL_NAME):
             NUM_CLASSES,
         )
         model.load_state_dict(torch.load(
-            f'artifacts/checkpoints/{MODEL_NAME}/improved/final/final_{MODEL_NAME}.pth',
+            f'artifacts/runs/improved_win500_hop250/checkpoints/{MODEL_NAME}/final/final_{MODEL_NAME}.pth',
             map_location=dev,
         ))
 
@@ -66,7 +66,7 @@ if 'model' not in locals():
     #     nn.Linear(2208, 5)
     # )
     # model.load_state_dict(torch.load(
-    #     'artifacts/checkpoints/resnet18/legacy_cv/best_resnet18_fold4.pth',
+    #     'artifacts/runs/legacy_win300_hop150/checkpoints/resnet18/cross_validation/best_resnet18_fold4.pth',
     #     map_location=dev,
     # ))
     # model = model.to(dev)

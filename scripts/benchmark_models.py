@@ -6,10 +6,10 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 from torchvision.models import densenet161, resnet18, efficientnet_b0, mobilenet_v3_large
-import dataLoad
+from semg_auth import data_loading as dataLoad
 
 
-DATA_PATH = "data/semg_dataset.npz"
+DATA_PATH = "data/processed/win300_hop150/semg_dataset.npz"
 BATCH_SIZE = 16
 EPOCHS = 45
 LEARNING_RATE = 1e-3

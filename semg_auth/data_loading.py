@@ -1,13 +1,20 @@
-import os
+from pathlib import Path
+
 import numpy as np
 
-def load_data(file_path="data/semg_dataset.npz"):
-    # 스크립트 기준 경로가 필요할 경우 아래 주석 해제
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_dir, file_path)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {os.path.abspath(file_path)}")
+
+def _resolve_project_path(file_path):
+    path = Path(file_path)
+    return path if path.is_absolute() else PROJECT_ROOT / path
+
+
+def load_data(file_path="data/processed/win300_hop150/semg_dataset.npz"):
+    file_path = _resolve_project_path(file_path)
+
+    if not file_path.exists():
+        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path.resolve()}")
 
     # with 구문을 통해 안전하게 로드 후 파일 핸들 해제
     with np.load(file_path, allow_pickle=True) as data:
@@ -20,19 +27,16 @@ def load_data(file_path="data/semg_dataset.npz"):
     return Xtr, ytr, Xte, yte
 
 
-def load_5fold_data(fold = 1, file_path="data/5fold dataset"):
+def load_5fold_data(fold=1, file_path="data/processed/win500_hop250/folds"):
 
     if fold not in range(1, 6):
         raise ValueError("fold는 1~5 사이의 정수여야 합니다.")
     
-    # 스크립트 기준 경로가 필요할 경우 아래 주석 해제
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_dir, file_path)
+    file_path = _resolve_project_path(file_path)
+    fold_path = file_path / f"fold{fold}_dataset.npz"
 
-    fold_path = os.path.join(file_path, f"fold{fold}_dataset.npz")
-
-    if not os.path.exists(fold_path):
-        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {os.path.abspath(fold_path)}")
+    if not fold_path.exists():
+        raise FileNotFoundError(f"파일을 찾을 수 없습니다: {fold_path.resolve()}")
 
     # with 구문을 통해 안전하게 로드 후 파일 핸들 해제
     with np.load(fold_path, allow_pickle=True) as data:
@@ -44,7 +48,7 @@ def load_5fold_data(fold = 1, file_path="data/5fold dataset"):
 
     return Xtr, ytr, Xva, yva
 
-# def load_5fold_data_all(fold = 1, file_path="data/5fold dataset"):
+# def load_5fold_data_all(fold=1, file_path="data/processed/win300_hop150/folds"):
 
 #     if fold not in range(1, 6):
 #         raise ValueError("fold는 1~5 사이의 정수여야 합니다.")
@@ -69,19 +73,17 @@ def load_5fold_data(fold = 1, file_path="data/5fold dataset"):
 #     return Xtr, ytr, Xva, yva
 
 
-def load_type_data(type='train', file_path="data/5fold dataset"):
+def load_type_data(type='train', file_path="data/processed/win500_hop250"):
     if type not in ['train', 'test']:
         raise ValueError("type은 'train' 또는 'test'이어야 합니다.")
     
-    # 스크립트 기준 경로가 필요할 경우 아래 주석 해제
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(base_dir, file_path)
+    file_path = _resolve_project_path(file_path)
 
     if type == 'train':
-        file_path = os.path.join(file_path, "train_dataset.npz")
+        file_path = file_path / "train_dataset.npz"
 
-        if not os.path.exists(file_path):
-                raise FileNotFoundError(f"파일을 찾을 수 없습니다: {os.path.abspath(file_path)}")
+        if not file_path.exists():
+                raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path.resolve()}")
 
         # with 구문을 통해 안전하게 로드 후 파일 핸들 해제
         with np.load(file_path, allow_pickle=True) as data:
@@ -92,10 +94,10 @@ def load_type_data(type='train', file_path="data/5fold dataset"):
         return Xtr, ytr
 
     elif type == 'test':
-        file_path = os.path.join(file_path, "test_dataset.npz")
+        file_path = file_path / "test_dataset.npz"
 
-        if not os.path.exists(file_path):
-                raise FileNotFoundError(f"파일을 찾을 수 없습니다: {os.path.abspath(file_path)}")
+        if not file_path.exists():
+                raise FileNotFoundError(f"파일을 찾을 수 없습니다: {file_path.resolve()}")
         
         # with 구문을 통해 안전하게 로드 후 파일 핸들 해제
         with np.load(file_path, allow_pickle=True) as data:
